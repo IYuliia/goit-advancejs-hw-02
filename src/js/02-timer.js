@@ -29,7 +29,6 @@ function handleDateSelection(selectedDates) {
     iziToast.error({
       position: 'topRight',
       progressBarColor: 'red',
-      //   title: 'Error',
       message: 'Please choose a date in the future',
     });
   } else {
