@@ -19,21 +19,37 @@ const hoursEl = document.querySelector('[data-hours]');
 const minsEl = document.querySelector('[data-minutes]');
 const secsEl = document.querySelector('[data-seconds]');
 
-let timerInterval = null;
+const initialTimerValue = timer.textContent;
+startBtn.disabled = true;
 
-flatpickr('input#datetime-picker', options);
+let timerInterval = null;
+let flatpickrInstance;
+
+flatpickrInstance = flatpickr('input#datetime-picker', options);
+
+startBtn.addEventListener('click', () => {
+  const selectedDate = flatpickrInstance.selectedDates[0];
+  if (selectedDate && selectedDate >= new Date()) {
+    startTimer(selectedDate);
+  }
+});
 
 function handleDateSelection(selectedDates) {
   const selectedDate = selectedDates[0];
   if (selectedDate < new Date()) {
-    iziToast.error({
-      position: 'topRight',
-      progressBarColor: 'red',
-      message: 'Please choose a date in the future',
-    });
+    handleInvalidDate();
   } else {
-    startTimer(selectedDate);
+    startBtn.disabled = false;
   }
+}
+
+function handleInvalidDate() {
+  iziToast.error({
+    position: 'topRight',
+    progressBarColor: 'red',
+    message: 'Please choose a date in the future',
+  });
+  startBtn.disabled = true;
 }
 
 function startTimer(selectedDate) {
@@ -44,16 +60,19 @@ function startTimer(selectedDate) {
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
       resetTimer();
+      startBtn.disabled = true;
     } else {
       const { days, hours, minutes, seconds } = convertMs(timeLeft);
       updateTimer(days, hours, minutes, seconds);
+      document.querySelector('input#datetime-picker').disabled = true;
     }
   }, 1000);
 }
 
 function resetTimer() {
-  timer.textContent = '00:00:00:00';
+  timer.textContent = initialTimerValue;
   startBtn.disabled = false;
+  document.querySelector('input#datetime-picker').disabled = false;
 }
 
 function updateTimer(days, hours, minutes, seconds) {
