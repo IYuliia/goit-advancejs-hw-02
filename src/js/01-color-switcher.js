@@ -1,3 +1,5 @@
+import '../css/color-switcher.css';
+
 const refs = {
   body: document.querySelector('body'),
   startBtn: document.querySelector('[data-start]'),
@@ -8,15 +10,18 @@ let intervalId = null;
 
 refs.startBtn.addEventListener('click', onBtnStart);
 refs.stopBtn.addEventListener('click', onBtnStop);
+refs.stopBtn.disabled = true;
 
 function onBtnStart() {
   intervalId = setInterval(changeBcgColor, 1000);
   refs.startBtn.disabled = true;
+  refs.stopBtn.disabled = false;
 }
 
 function onBtnStop() {
   clearInterval(intervalId);
   refs.startBtn.disabled = false;
+  refs.stopBtn.disabled = true;
 }
 
 function changeBcgColor() {
