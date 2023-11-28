@@ -54,4 +54,7 @@ refs.submitBtn.addEventListener('click', event => {
         });
       });
   }
+  refs.delay.value = '';
+  refs.step.value = '';
+  refs.amount.value = '';
 });
